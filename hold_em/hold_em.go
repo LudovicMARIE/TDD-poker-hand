@@ -195,5 +195,52 @@ func ParseHandCategory(cards []Card) (HandCategory, error) {
 }
 
 func CompareHands(handA, handB EvaluatedHand) int {
-	panic("not implemented yet")
+	if handA.Category > handB.Category {
+		return 1
+	}
+	if handA.Category < handB.Category {
+		return -1
+	}
+
+	ranksA := buildTieBreakRanks(handA)
+	ranksB := buildTieBreakRanks(handB)
+
+	for i := range 5 {
+		if ranksA[i] > ranksB[i] {
+			return 1
+		}
+		if ranksA[i] < ranksB[i] {
+			return -1
+		}
+	}
+
+	return 0
+}
+
+func buildTieBreakRanks(hand EvaluatedHand) []Rank {
+	counts := make(map[Rank]int)
+	for _, c := range hand.Cards {
+		counts[c.Rank]++
+	}
+
+	var ranks []Rank
+	for _, c := range hand.Cards {
+		ranks = append(ranks, c.Rank)
+	}
+
+	if hand.Category == Straight || hand.Category == StraightFlush {
+		if ranks[0] == 14 && ranks[1] == 5 {
+			return []Rank{5, 4, 3, 2, 1}
+		}
+		return ranks
+	}
+
+	sort.SliceStable(ranks, func(i, j int) bool {
+		if counts[ranks[i]] != counts[ranks[j]] {
+			return counts[ranks[i]] > counts[ranks[j]]
+		}
+		return ranks[i] > ranks[j]
+	})
+
+	return ranks
 }
