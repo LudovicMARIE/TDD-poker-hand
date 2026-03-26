@@ -251,9 +251,46 @@ func buildTieBreakRanks(hand EvaluatedHand) []Rank {
 }
 
 func GetBest5From7(allCards []Card) (EvaluatedHand, error) {
-	panic("not implemented yet")
+	var best EvaluatedHand
+	first := true
+
+	for i := 0; i < 7; i++ {
+		for j := i + 1; j < 7; j++ {
+			combo := make([]Card, 0, 5)
+			for k := 0; k < 7; k++ {
+				if k != i && k != j {
+					combo = append(combo, allCards[k])
+				}
+			}
+
+			cat, _ := ParseHandCategory(combo)
+			current := EvaluatedHand{Cards: combo, Category: cat}
+
+			if first || CompareHands(current, best) > 0 {
+				best = current
+				first = false
+			}
+		}
+	}
+	return best, nil
 }
 
 func DetermineWinners(players []PlayerResult) []string {
-	panic("not implemented yet")
+	if len(players) == 0 {
+		return nil
+	}
+
+	var winners []string
+	best := players[0].BestHand
+
+	for _, p := range players {
+		cmp := CompareHands(p.BestHand, best)
+		if cmp > 0 {
+			best = p.BestHand
+			winners = []string{p.PlayerID}
+		} else if cmp == 0 {
+			winners = append(winners, p.PlayerID)
+		}
+	}
+	return winners
 }
