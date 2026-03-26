@@ -41,6 +41,11 @@ const (
 	StraightFlush
 )
 
+type EvaluatedHand struct {
+	Cards    []Card
+	Category HandCategory
+}
+
 // ParseCard takes a string like "Ah" or "Ts" and returns a Card.
 func ParseCard(s string) (Card, error) {
 	if len(s) != 2 {
@@ -102,6 +107,8 @@ func ParseHandCategory(cards []Card) (HandCategory, error) {
 	if len(cards) != 5 {
 		return HighCard, ErrInvalidLength
 	}
+
+	// check for duplicate cards
 	seen := make(map[Card]bool)
 	for _, card := range cards {
 		if seen[card] {
@@ -185,4 +192,8 @@ func ParseHandCategory(cards []Card) (HandCategory, error) {
 	}
 
 	return HighCard, nil
+}
+
+func CompareHands(handA, handB EvaluatedHand) int {
+	panic("not implemented yet")
 }

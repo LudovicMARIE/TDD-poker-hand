@@ -73,3 +73,68 @@ func TestParseHandCategory(t *testing.T) {
 		})
 	}
 }
+
+func TestCompareHands(t *testing.T) {
+	tests := []struct {
+		name     string
+		handA    holdem.EvaluatedHand
+		handB    holdem.EvaluatedHand
+		expected int // 1 for A wins, -1 for B wins, 0 for tie
+	}{
+		{
+			name:     "Different Categories: Flush beats One Pair",
+			handA:    holdem.EvaluatedHand{Category: holdem.Flush},
+			handB:    holdem.EvaluatedHand{Category: holdem.OnePair},
+			expected: 1,
+		},
+		{
+			name:     "Different Categories: High Card loses to Straight",
+			handA:    holdem.EvaluatedHand{Category: holdem.HighCard},
+			handB:    holdem.EvaluatedHand{Category: holdem.Straight},
+			expected: -1,
+		},
+		{
+			name: "High Card Tie-Breaker: A-high beats K-high",
+			handA: holdem.EvaluatedHand{
+				Category: holdem.HighCard,
+				Cards:    []holdem.Card{{Rank: 14}, {Rank: 10}, {Rank: 9}, {Rank: 5}, {Rank: 2}},
+			},
+			handB: holdem.EvaluatedHand{
+				Category: holdem.HighCard,
+				Cards:    []holdem.Card{{Rank: 13}, {Rank: 12}, {Rank: 11}, {Rank: 9}, {Rank: 8}},
+			},
+			expected: 1,
+		},
+		{
+			name: "High Card Tie-Breaker: Deep tie-break (3rd card)",
+			handA: holdem.EvaluatedHand{
+				Category: holdem.HighCard,
+				Cards:    []holdem.Card{{Rank: 14}, {Rank: 13}, {Rank: 9}, {Rank: 5}, {Rank: 2}},
+			},
+			handB: holdem.EvaluatedHand{
+				Category: holdem.HighCard,
+				Cards:    []holdem.Card{{Rank: 14}, {Rank: 13}, {Rank: 8}, {Rank: 7}, {Rank: 6}},
+			},
+			expected: 1, // 9 beats 8
+		},
+		{
+			name: "Absolute Tie",
+			handA: holdem.EvaluatedHand{
+				Category: holdem.HighCard,
+				Cards:    []holdem.Card{{Rank: 14}, {Rank: 13}, {Rank: 9}, {Rank: 5}, {Rank: 2}},
+			},
+			handB: holdem.EvaluatedHand{
+				Category: holdem.HighCard,
+				Cards:    []holdem.Card{{Rank: 14}, {Rank: 13}, {Rank: 9}, {Rank: 5}, {Rank: 2}},
+			},
+			expected: 0,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := holdem.CompareHands(tt.handA, tt.handB)
+			assert.Equal(t, tt.expected, result, "Comparison result mismatch")
+		})
+	}
+}
