@@ -102,12 +102,12 @@ func ParseHandCategory(cards []Card) (HandCategory, error) {
 	if len(cards) != 5 {
 		return HighCard, ErrInvalidLength
 	}
-	for i := 0; i < len(cards); i++ {
-		for j := i + 1; j < len(cards); j++ {
-			if cards[i] == cards[j] {
-				return HighCard, ErrDuplicateCard
-			}
+	seen := make(map[Card]bool)
+	for _, card := range cards {
+		if seen[card] {
+			return HighCard, ErrDuplicateCard
 		}
+		seen[card] = true
 	}
 
 	sort.Slice(cards, func(i, j int) bool {
