@@ -2,6 +2,7 @@ package holdem
 
 import (
 	"errors"
+	"sort"
 )
 
 type Suit rune
@@ -97,5 +98,50 @@ func ParseCard(s string) (Card, error) {
 }
 
 func ParseHandCategory(cards []Card) (HandCategory, error) {
-	panic("not implemented yet")
+	if len(cards) != 5 {
+		return HighCard, ErrInvalidLength
+	}
+
+	sort.Slice(cards, func(i, j int) bool {
+		return cards[i].Rank > cards[j].Rank // Descending order
+	})
+
+	// map to count occurrences of each rank
+	counts := make(map[Rank]int)
+	for _, card := range cards {
+		counts[card.Rank]++
+	}
+	pairsCount := 0
+	threeOfAKindCount := 0
+	fourOfAKindCount := 0
+
+	// count pairs, three of a kind, and four of a kind
+	for _, count := range counts {
+		switch count {
+		case 2:
+			pairsCount++
+		case 3:
+			threeOfAKindCount++
+		case 4:
+			fourOfAKindCount++
+		}
+	}
+
+	if fourOfAKindCount == 1 {
+		return FourOfAKind, nil
+	}
+	if threeOfAKindCount == 1 && pairsCount == 1 {
+		return FullHouse, nil
+	}
+	if threeOfAKindCount == 1 {
+		return ThreeOfAKind, nil
+	}
+	if pairsCount == 2 {
+		return TwoPair, nil
+	}
+	if pairsCount == 1 {
+		return OnePair, nil
+	}
+
+	return HighCard, nil
 }
