@@ -50,6 +50,13 @@ func TestParseHandCategory(t *testing.T) {
 		{"High Card", []holdem.Card{{Rank: 14, Suit: holdem.Hearts}, {Rank: 13, Suit: holdem.Diamonds}, {Rank: 12, Suit: holdem.Clubs}, {Rank: 11, Suit: holdem.Spades}, {Rank: 9, Suit: holdem.Hearts}}, holdem.HighCard, nil},
 		{"One Pair", []holdem.Card{{Rank: 14, Suit: holdem.Hearts}, {Rank: 12, Suit: holdem.Clubs}, {Rank: 11, Suit: holdem.Spades}, {Rank: 14, Suit: holdem.Diamonds}, {Rank: 9, Suit: holdem.Hearts}}, holdem.OnePair, nil},
 		{"Two Pair", []holdem.Card{{Rank: 14, Suit: holdem.Diamonds}, {Rank: 12, Suit: holdem.Clubs}, {Rank: 14, Suit: holdem.Hearts}, {Rank: 12, Suit: holdem.Spades}, {Rank: 9, Suit: holdem.Hearts}}, holdem.TwoPair, nil},
+		{"Three of a Kind", []holdem.Card{{Rank: 8, Suit: holdem.Hearts}, {Rank: 8, Suit: holdem.Diamonds}, {Rank: 13, Suit: holdem.Spades}, {Rank: 8, Suit: holdem.Clubs}, {Rank: 2, Suit: holdem.Hearts}}, holdem.ThreeOfAKind, nil},
+		{"Full House", []holdem.Card{{Rank: 10, Suit: holdem.Hearts}, {Rank: 10, Suit: holdem.Diamonds}, {Rank: 10, Suit: holdem.Clubs}, {Rank: 4, Suit: holdem.Spades}, {Rank: 4, Suit: holdem.Hearts}}, holdem.FullHouse, nil},
+		{"Four of a Kind", []holdem.Card{{Rank: 9, Suit: holdem.Hearts}, {Rank: 9, Suit: holdem.Diamonds}, {Rank: 9, Suit: holdem.Clubs}, {Rank: 2, Suit: holdem.Hearts}, {Rank: 9, Suit: holdem.Spades}}, holdem.FourOfAKind, nil},
+		{"Flush", []holdem.Card{{Rank: 14, Suit: holdem.Hearts}, {Rank: 11, Suit: holdem.Hearts}, {Rank: 9, Suit: holdem.Hearts}, {Rank: 6, Suit: holdem.Hearts}, {Rank: 4, Suit: holdem.Hearts}}, holdem.Flush, nil},
+		{"Straight (Standard)", []holdem.Card{{Rank: 9, Suit: holdem.Hearts}, {Rank: 8, Suit: holdem.Diamonds}, {Rank: 7, Suit: holdem.Clubs}, {Rank: 6, Suit: holdem.Spades}, {Rank: 5, Suit: holdem.Hearts}}, holdem.Straight, nil},
+		{"Straight (Ace-Low Wheel)", []holdem.Card{{Rank: 14, Suit: holdem.Hearts}, {Rank: 4, Suit: holdem.Clubs}, {Rank: 3, Suit: holdem.Spades}, {Rank: 5, Suit: holdem.Diamonds}, {Rank: 2, Suit: holdem.Hearts}}, holdem.Straight, nil},
+		{"Straight Flush", []holdem.Card{{Rank: 11, Suit: holdem.Hearts}, {Rank: 10, Suit: holdem.Hearts}, {Rank: 8, Suit: holdem.Hearts}, {Rank: 9, Suit: holdem.Hearts}, {Rank: 7, Suit: holdem.Hearts}}, holdem.StraightFlush, nil},
 	}
 
 	for _, tt := range tests {

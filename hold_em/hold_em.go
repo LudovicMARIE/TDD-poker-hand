@@ -106,6 +106,30 @@ func ParseHandCategory(cards []Card) (HandCategory, error) {
 		return cards[i].Rank > cards[j].Rank // Descending order
 	})
 
+	isFlush := true
+	isStraight := true
+
+	// check for flush
+	for i := 1; i < len(cards); i++ {
+		if cards[i].Suit != cards[0].Suit {
+			isFlush = false
+			break
+		}
+	}
+
+	// check for consecutive ranks (straigth)
+	if cards[0].Rank == 14 && cards[1].Rank == 5 && cards[2].Rank == 4 && cards[3].Rank == 3 && cards[4].Rank == 2 {
+		// Ace-low straight (A-5-4-3-2)
+		isStraight = true
+	} else {
+		for j := 1; j < len(cards); j++ {
+			if cards[j].Rank != cards[j-1].Rank-1 {
+				isStraight = false
+				break
+			}
+		}
+	}
+
 	// map to count occurrences of each rank
 	counts := make(map[Rank]int)
 	for _, card := range cards {
@@ -127,11 +151,20 @@ func ParseHandCategory(cards []Card) (HandCategory, error) {
 		}
 	}
 
+	if isStraight && isFlush {
+		return StraightFlush, nil
+	}
 	if fourOfAKindCount == 1 {
 		return FourOfAKind, nil
 	}
 	if threeOfAKindCount == 1 && pairsCount == 1 {
 		return FullHouse, nil
+	}
+	if isFlush {
+		return Flush, nil
+	}
+	if isStraight {
+		return Straight, nil
 	}
 	if threeOfAKindCount == 1 {
 		return ThreeOfAKind, nil
