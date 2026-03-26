@@ -46,6 +46,11 @@ type EvaluatedHand struct {
 	Category HandCategory
 }
 
+type PlayerResult struct {
+	PlayerID string
+	BestHand EvaluatedHand
+}
+
 // ParseCard takes a string like "Ah" or "Ts" and returns a Card.
 func ParseCard(s string) (Card, error) {
 	if len(s) != 2 {
@@ -243,4 +248,12 @@ func buildTieBreakRanks(hand EvaluatedHand) []Rank {
 	})
 
 	return ranks
+}
+
+func GetBest5From7(allCards []Card) (EvaluatedHand, error) {
+	panic("not implemented yet")
+}
+
+func DetermineWinners(players []PlayerResult) []string {
+	panic("not implemented yet")
 }

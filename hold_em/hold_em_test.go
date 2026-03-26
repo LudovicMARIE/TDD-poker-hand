@@ -138,3 +138,51 @@ func TestCompareHands(t *testing.T) {
 		})
 	}
 }
+
+func TestTexasHoldem(t *testing.T) {
+	t.Run("Example E - Quads on board kicker decides", func(t *testing.T) {
+		board := parseCards(t, []string{"7s", "7h", "7d", "7c", "4s"})
+		p1Hole := parseCards(t, []string{"As", "Ks"})
+		p2Hole := parseCards(t, []string{"Qs", "Js"})
+
+		b1, _ := holdem.GetBest5From7(append(board, p1Hole...))
+		b2, _ := holdem.GetBest5From7(append(board, p2Hole...))
+
+		results := []holdem.PlayerResult{
+			{PlayerID: "Player1", BestHand: b1},
+			{PlayerID: "Player2", BestHand: b2},
+		}
+
+		winners := holdem.DetermineWinners(results)
+		assert.Equal(t, []string{"Player1"}, winners)
+		assert.Equal(t, holdem.FourOfAKind, b1.Category)
+	})
+
+	t.Run("Example D - Board plays (Tie)", func(t *testing.T) {
+		board := parseCards(t, []string{"5s", "6h", "7d", "8c", "9s"})
+		p1Hole := parseCards(t, []string{"2s", "2h"})
+		p2Hole := parseCards(t, []string{"3s", "3h"})
+
+		b1, _ := holdem.GetBest5From7(append(board, p1Hole...))
+		b2, _ := holdem.GetBest5From7(append(board, p2Hole...))
+
+		winners := holdem.DetermineWinners([]holdem.PlayerResult{
+			{PlayerID: "P1", BestHand: b1},
+			{PlayerID: "P2", BestHand: b2},
+		})
+
+		assert.Len(t, winners, 2)
+		assert.Contains(t, winners, "P1")
+		assert.Contains(t, winners, "P2")
+	})
+}
+
+func parseCards(t *testing.T, inputs []string) []holdem.Card {
+	res := make([]holdem.Card, len(inputs))
+	for i, s := range inputs {
+		c, err := holdem.ParseCard(s)
+		require.NoError(t, err)
+		res[i] = c
+	}
+	return res
+}
