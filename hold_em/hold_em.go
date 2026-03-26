@@ -7,6 +7,12 @@ import (
 type Suit rune
 type Rank int
 
+var (
+	ErrInvalidLength = errors.New("invalid card length")
+	ErrInvalidRank   = errors.New("invalid rank")
+	ErrInvalidSuit   = errors.New("invalid suit")
+)
+
 type Card struct {
 	Rank Rank
 	Suit Suit
@@ -36,7 +42,7 @@ const (
 // ParseCard takes a string like "Ah" or "Ts" and returns a Card.
 func ParseCard(s string) (Card, error) {
 	if len(s) != 2 {
-		return Card{}, errors.New("invalid card length")
+		return Card{}, ErrInvalidLength
 	}
 
 	rankByte := s[0] // rank
@@ -72,7 +78,7 @@ func ParseCard(s string) (Card, error) {
 	case '2':
 		rank = 2
 	default:
-		return Card{}, errors.New("invalid rank")
+		return Card{}, ErrInvalidRank
 	}
 
 	switch suitByte {
@@ -85,7 +91,7 @@ func ParseCard(s string) (Card, error) {
 	case 's', 'S': // spades
 		return Card{Rank: rank, Suit: Spades}, nil
 	default:
-		return Card{}, errors.New("invalid suit")
+		return Card{}, ErrInvalidSuit
 	}
 
 }
