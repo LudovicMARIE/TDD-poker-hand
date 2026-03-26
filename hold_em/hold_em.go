@@ -19,6 +19,20 @@ const (
 	Spades   Suit = 's'
 )
 
+type HandCategory int
+
+const (
+	HighCard HandCategory = iota
+	OnePair
+	TwoPair
+	ThreeOfAKind
+	Straight
+	Flush
+	FullHouse
+	FourOfAKind
+	StraightFlush
+)
+
 // ParseCard takes a string like "Ah" or "Ts" and returns a Card.
 func ParseCard(s string) (Card, error) {
 	if len(s) != 2 {
@@ -74,4 +88,8 @@ func ParseCard(s string) (Card, error) {
 		return Card{}, errors.New("invalid suit")
 	}
 
+}
+
+func ParseHandCategory(cards []Card) (HandCategory, error) {
+	panic("not implemented yet")
 }
