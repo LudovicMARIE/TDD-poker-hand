@@ -47,6 +47,7 @@ func TestParseHandCategory(t *testing.T) {
 		expectedErr  error
 	}{
 		{"Invalid hand size", []holdem.Card{{Rank: 3, Suit: holdem.Diamonds}}, holdem.HighCard, holdem.ErrInvalidLength},
+		{"Duplicate Cards", []holdem.Card{{Rank: 10, Suit: holdem.Hearts}, {Rank: 10, Suit: holdem.Hearts}, {Rank: 9, Suit: holdem.Clubs}, {Rank: 8, Suit: holdem.Spades}, {Rank: 2, Suit: holdem.Diamonds}}, holdem.HighCard, holdem.ErrDuplicateCard},
 		{"High Card", []holdem.Card{{Rank: 14, Suit: holdem.Hearts}, {Rank: 13, Suit: holdem.Diamonds}, {Rank: 12, Suit: holdem.Clubs}, {Rank: 11, Suit: holdem.Spades}, {Rank: 9, Suit: holdem.Hearts}}, holdem.HighCard, nil},
 		{"One Pair", []holdem.Card{{Rank: 14, Suit: holdem.Hearts}, {Rank: 12, Suit: holdem.Clubs}, {Rank: 11, Suit: holdem.Spades}, {Rank: 14, Suit: holdem.Diamonds}, {Rank: 9, Suit: holdem.Hearts}}, holdem.OnePair, nil},
 		{"Two Pair", []holdem.Card{{Rank: 14, Suit: holdem.Diamonds}, {Rank: 12, Suit: holdem.Clubs}, {Rank: 14, Suit: holdem.Hearts}, {Rank: 12, Suit: holdem.Spades}, {Rank: 9, Suit: holdem.Hearts}}, holdem.TwoPair, nil},

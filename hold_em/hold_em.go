@@ -12,6 +12,7 @@ var (
 	ErrInvalidLength = errors.New("invalid card length")
 	ErrInvalidRank   = errors.New("invalid rank")
 	ErrInvalidSuit   = errors.New("invalid suit")
+	ErrDuplicateCard = errors.New("duplicate card in hand")
 )
 
 type Card struct {
